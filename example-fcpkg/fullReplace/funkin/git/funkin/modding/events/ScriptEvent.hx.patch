@@ -1,0 +1,6 @@
+-# class ScriptEvent\n{
+class ScriptEvent
+{
+  public static var pool:Array<ScriptEvent> = [];
+  private function reset_ScriptEvent() {}
+  public static function get(evType:ScriptEventType,...args:Any):ScriptEvent { return null;}

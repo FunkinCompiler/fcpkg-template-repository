@@ -1,0 +1,13 @@
+-# class ChartEditorMetadataToolbox extends ChartEditorBaseToolbox\n\{
+class ChartEditorMetadataToolbox extends ChartEditorBaseToolbox //Patched 3
+    {
+      public var toolboxNotesCustomKindLabel:Label;
+      public var inputDifficultyRating:NumberStepper;
+      public var inputTimeSignature:DropDown;
+      
+      public var inputTimeChange:DropDown;
+      public var createTimeChange:Button;
+      public var removeTimeChange:DropDown;
+      public var inputTSNum:DropDown;
+      public var inputTSDen:DropDown;
+

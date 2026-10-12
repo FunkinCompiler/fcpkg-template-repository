@@ -1,0 +1,5 @@
+-# class ChartEditorUploadChartDialog extends ChartEditorBaseDialog\n{
+class ChartEditorUploadChartDialog extends ChartEditorBaseDialog // patch
+{
+  public var dialogCancel:Button;
+  public var chartBox:haxe.ui.containers.Box;

@@ -1,0 +1,5 @@
+-# public function parseEntryData
+override public function parseEntryData-# variationSong\._asc != null
+true
+-# variationSong\._asc\.fullyQualifiedName;
+"";

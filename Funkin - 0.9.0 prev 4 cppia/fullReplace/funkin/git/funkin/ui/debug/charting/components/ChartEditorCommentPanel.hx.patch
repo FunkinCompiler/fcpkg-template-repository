@@ -1,0 +1,4 @@
+-# class ChartEditorCommentPanel extends Panel\n{
+class ChartEditorCommentPanel extends Panel // ll
+{
+  public var commentCardTextField:TextField;

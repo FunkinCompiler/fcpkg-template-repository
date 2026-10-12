@@ -1,0 +1,5 @@
+-# class ChartEditorNoteDataToolbox extends ChartEditorBaseToolbox\n\{
+class ChartEditorNoteDataToolbox extends ChartEditorBaseToolbox //Patched 
+    {
+      public var toolboxNotesCustomKindLabel:Label;
+

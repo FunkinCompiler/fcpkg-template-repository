@@ -1,0 +1,6 @@
+-# var path:String = _asc\?\.fullyQualifiedName \?\? '';
+var path:String = "";
+-# var constructorArgs:Array<Dynamic> = _asc\?\.getConstructorArgs\(\) \?\? \[\];
+var constructorArgs:Array<Dynamic> = [];
+-# var nextState:NextState = _asc != null \? scriptedNextState : _constructor;
+var nextState:NextState = null;

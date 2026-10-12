@@ -1,0 +1,4 @@
+-# class SongTemplateList extends ScrollView\n{
+class SongTemplateList extends ScrollView // ll
+{
+  public var songListVBox:haxe.ui.containers.VBox;

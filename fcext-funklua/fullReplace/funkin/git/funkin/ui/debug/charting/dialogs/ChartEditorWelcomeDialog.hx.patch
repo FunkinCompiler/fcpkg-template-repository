@@ -1,0 +1,14 @@
+-# class ChartEditorWelcomeDialog extends ChartEditorBaseDialog\n\{
+class ChartEditorWelcomeDialog extends ChartEditorBaseDialog //Patched 
+    {
+      public var splashCreateFromSongBasicErect:Label;
+      public var splashCreateFromSongBasicOnly:Label;
+      public var splashCreateFromSongErectOnly:Label;
+      public var splashImportChartLegacy:Label;
+      public var splashBrowse:Button;
+      
+      public var buttonNew:Label;
+      
+      public var splashRecentContainer:VBox;
+      public var splashTemplateContainer:VBox;
+

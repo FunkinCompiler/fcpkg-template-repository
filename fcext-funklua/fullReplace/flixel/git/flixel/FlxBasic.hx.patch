@@ -1,0 +1,5 @@
+-# class FlxBasic implements IFlxDestroyable\n\{
+class FlxBasic implements IFlxDestroyable
+{
+    public var zIndex:Int = 0;
+

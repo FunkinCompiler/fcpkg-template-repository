@@ -1,0 +1,6 @@
+-# class ChartEditorNoteContextMenu extends ChartEditorBaseContextMenu\n\{
+class ChartEditorNoteContextMenu extends ChartEditorBaseContextMenu //Patched 
+    {
+      public var contextmenuAddHold:MenuItem;
+
+      

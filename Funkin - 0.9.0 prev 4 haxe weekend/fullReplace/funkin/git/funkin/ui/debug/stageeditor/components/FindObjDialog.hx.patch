@@ -1,0 +1,7 @@
+-# class FindObjDialog extends Dialog\n\{
+class FindObjDialog extends Dialog
+{
+  public var nameField:TextField;
+  public var capsCheck:CheckBox;
+  public var wordCheck:CheckBox;
+  public var indicator:haxe.ui.components.Label;

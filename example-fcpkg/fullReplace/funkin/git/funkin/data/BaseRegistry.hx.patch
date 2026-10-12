@@ -1,0 +1,10 @@
+-# public abstract function parseEntryData\(id:String\):Null<J>;
+public function parseEntryData(id:String):Null<J> { return null;}
+-# public abstract function parseEntryDataRaw\(contents:String, \?fileName:String\):Null<J>;
+public function parseEntryDataRaw(contents:String, ?fileName:String):Null<J> { return null;}
+-# abstract function getScriptedClassNames\(\):Array<String>;
+function getScriptedClassNames():Array<String> {return [];}
+-# \/\/ public function listBaseGameEntryIds\(\):Array<String> {}
+public function listBaseGameEntryIds():Array<String> { return [];}
+-# \/\/ public function listModdedEntryIds\(\):Array<String> {}
+public function listModdedEntryIds():Array<String> { return [];}

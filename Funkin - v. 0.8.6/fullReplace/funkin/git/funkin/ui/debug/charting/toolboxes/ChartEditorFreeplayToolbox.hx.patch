@@ -1,0 +1,10 @@
+-# class ChartEditorFreeplayToolbox extends ChartEditorBaseToolbox\n\{
+class ChartEditorFreeplayToolbox extends ChartEditorBaseToolbox //Patched 
+    {
+      public var testPreview:Button;
+      public var freeplayMusicMute:Button;
+      public var inputDifficultyRating:NumberStepper;
+      public var inputTimeSignature:DropDown;
+      public var freeplayMusicVolume:Slider;
+      public var freeplayLabelTime:Label;
+

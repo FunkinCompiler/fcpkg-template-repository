@@ -1,0 +1,2 @@
+-# public var text:Variant;
+public var __text:Variant;

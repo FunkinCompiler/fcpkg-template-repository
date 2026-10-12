@@ -1,0 +1,4 @@
+-# class NewObjDialog extends Dialog\n\{
+class NewObjDialog extends Dialog
+{
+    public var field:TextField;

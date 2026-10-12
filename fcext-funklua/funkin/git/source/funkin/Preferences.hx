@@ -1,0 +1,847 @@
+package funkin;
+
+#if android
+import funkin.external.android.DisplayUtil;
+#end
+
+#if mobile
+import funkin.mobile.input.ControlsHandler;
+import funkin.mobile.ui.FunkinHitbox;
+import funkin.mobile.util.InAppPurchasesUtil;
+import funkin.util.plugins.TouchPointerPlugin;
+#end
+import funkin.save.Save;
+import funkin.util.WindowUtil;
+import funkin.util.HapticUtil.HapticsMode;
+import funkin.ui.debug.FunkinDebugDisplay.DebugDisplayMode;
+
+/**
+ * A core class which provides a store of user-configurable, globally relevant values.
+ */
+@:nullSafety
+class Preferences
+{
+  /**
+   * FPS
+   * Always the refresh rate of the display on mobile, or 60 on web.
+   * @default `60`
+   */
+  public static var framerate(get, set):Int;
+
+  static function get_framerate():Int
+  {
+    #if web
+    return 60;
+    #elseif mobile
+    var refreshRate:Int = FlxG.stage.window.displayMode.refreshRate;
+
+    if (refreshRate < 60) refreshRate = 60;
+
+    return refreshRate;
+    #else
+    return Save?.instance?.options?.framerate ?? 60;
+    #end
+  }
+
+  static function set_framerate(value:Int):Int
+  {
+    #if web
+    return 60;
+    #elseif mobile
+    var refreshRate:Int = FlxG.stage.window.displayMode.refreshRate;
+
+    if (refreshRate < 60) refreshRate = 60;
+
+    return refreshRate;
+    #else
+    var save:Save = Save.instance;
+    save.options.framerate = value;
+    Save.system.flush();
+
+    if (!unlockedFramerate)
+    {
+      FlxG.updateFramerate = value;
+      FlxG.drawFramerate = value;
+    }
+
+    return value;
+    #end
+  }
+
+  /**
+   * Whether some particularly foul language is displayed.
+   * @default `true`
+   */
+  public static var naughtyness(get, set):Bool;
+
+  static function get_naughtyness():Bool
+  {
+    #if NO_FEATURE_NAUGHTYNESS
+    return false;
+    #else
+    return Save?.instance?.options?.naughtyness ?? true;
+    #end
+  }
+
+  static function set_naughtyness(value:Bool):Bool
+  {
+    #if NO_FEATURE_NAUGHTYNESS
+    return false;
+    #else
+    var save:Save = Save.instance;
+    save.options.naughtyness = value;
+    Save.system.flush();
+    return value;
+    #end
+  }
+
+  /**
+   * If enabled, the strumline is at the bottom of the screen rather than the top.
+   * @default `false`
+   */
+  public static var downscroll(get, set):Bool;
+
+  static function get_downscroll():Bool
+  {
+    return Save?.instance?.options?.downscroll #if mobile ?? true #else ?? false #end;
+  }
+
+  static function set_downscroll(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.downscroll = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * If enabled, player strumline is centered and opponent strumline is split/hidden.
+   * @default `false`
+   */
+  public static var middleScroll(get, set):Bool;
+
+  static function get_middleScroll():Bool
+  {
+    return Save?.instance?.options?.middleScroll ?? false;
+  }
+
+  static function set_middleScroll(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.middleScroll = value;
+    Save.system.flush();
+    return value;
+  }
+
+  public static function shouldUseMiddleScroll():Bool
+  {
+    #if mobile
+    if (controlsScheme == FunkinHitboxControlSchemes.Arrows && !ControlsHandler.hasExternalInputDevice) return false;
+    #end
+    return middleScroll;
+  }
+
+  /**
+   * If disabled, flashing lights in the main menu and other areas will be less intense.
+   * @default `true`
+   */
+  public static var flashingLights(get, set):Bool;
+
+  static function get_flashingLights():Bool
+  {
+    return Save?.instance?.options?.flashingLights ?? true;
+  }
+
+  static function set_flashingLights(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.flashingLights = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * If disabled, the camera bump synchronized to the beat.
+   * @default `false`
+   */
+  public static var zoomCamera(get, set):Bool;
+
+  static function get_zoomCamera():Bool
+  {
+    return Save?.instance?.options?.zoomCamera ?? true;
+  }
+
+  static function set_zoomCamera(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.zoomCamera = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * If enabled, song gameplay may use stage and character shaders.
+   * Low Quality Minimal/Max forces this off.
+   * @default `true`
+   */
+  public static var songShaders(get, set):Bool;
+
+  static function get_songShaders():Bool
+  {
+    return Save?.instance?.options?.songShaders ?? true;
+  }
+
+  static function set_songShaders(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.songShaders = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * `None`, `Minimal`, or `Max`.
+   * @default `None`
+   */
+  public static var lowQualityMode(get, set):String;
+
+  static function get_lowQualityMode():String
+  {
+    var value = Save?.instance?.options?.lowQualityMode ?? 'None';
+    return switch (value)
+    {
+      case 'Minimal' | 'Max': value;
+      default: 'None';
+    };
+  }
+
+  static function set_lowQualityMode(value:String):String
+  {
+    var cleanValue = switch (value)
+    {
+      case 'Minimal' | 'Max': value;
+      default: 'None';
+    };
+
+    var save:Save = Save.instance;
+    save.options.lowQualityMode = cleanValue;
+    Save.system.flush();
+    return cleanValue;
+  }
+
+  public static function isLowQualityMinimal():Bool
+  {
+    return lowQualityMode == 'Minimal' || lowQualityMode == 'Max';
+  }
+
+  public static function isLowQualityMax():Bool
+  {
+    return lowQualityMode == 'Max';
+  }
+
+  public static function allowSongShaders():Bool
+  {
+    return songShaders && !isLowQualityMinimal();
+  }
+
+  #if mobile
+  public static var touchPointers(get, set):Bool;
+
+  static function get_touchPointers():Bool
+  {
+    return Save?.instance?.mobileOptions?.touchPointers ?? true;
+  }
+
+  static function set_touchPointers(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.mobileOptions.touchPointers = value;
+    TouchPointerPlugin.enabled = value;
+    Save.system.flush();
+    return value;
+  }
+  #end
+
+  /**
+   * If enabled, an FPS and memory counter will be displayed even if this is not a debug build.
+   * Always disabled on release mobile builds.
+   * @default `Off`
+   */
+  public static var debugDisplay(get, set):DebugDisplayMode;
+
+  static function get_debugDisplay():DebugDisplayMode
+  {
+    #if NO_FEATURE_DEBUG_DISPLAY
+    return DebugDisplayMode.Off;
+    #else
+    #if hl
+    // Account for when debugDisplay used to be a boolean
+    var options:Null<SaveDataOptions> = Save.instance?.options;
+    if (options != null && Std.isOfType(options.debugDisplay, Bool))
+    {
+      var convertedDebugDisplay = cast(options.debugDisplay, Bool) ? DebugDisplayMode.Simple : DebugDisplayMode.Off;
+      options.debugDisplay = convertedDebugDisplay;
+      Save.system.flush();
+    }
+    #end
+    return Save?.instance?.options?.debugDisplay ?? 'Off';
+    #end
+  }
+
+  static function set_debugDisplay(value:DebugDisplayMode):DebugDisplayMode
+  {
+    #if NO_FEATURE_DEBUG_DISPLAY
+    return DebugDisplayMode.Off;
+    #else
+    if (value != Save.instance.options.debugDisplay) setDebugDisplayMode(value);
+
+    var save = Save.instance;
+    save.options.debugDisplay = value;
+    Save.system.flush();
+    return value;
+    #end
+  }
+
+  /**
+   * Opacity of the debug display's background.
+   * @default `50`
+   */
+  public static var debugDisplayBGOpacity(get, set):Int;
+
+  static function get_debugDisplayBGOpacity():Int
+  {
+    return Save?.instance?.options?.debugDisplayBGOpacity ?? 50;
+  }
+
+  static function set_debugDisplayBGOpacity(value:Int):Int
+  {
+    setDebugDisplayBGOpacity(value / 100);
+
+    var save:Save = Save.instance;
+    save.options.debugDisplayBGOpacity = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * If enabled, haptic feedback will be enabled.
+   * @default `All`
+   */
+  public static var hapticsMode(get, set):HapticsMode;
+
+  static function get_hapticsMode():HapticsMode
+  {
+    var value = Save?.instance?.options?.hapticsMode ?? "All";
+
+    return switch (value)
+    {
+      case "None":
+        HapticsMode.NONE;
+      case "Notes Only":
+        HapticsMode.NOTES_ONLY;
+      default:
+        HapticsMode.ALL;
+    };
+  }
+
+  static function set_hapticsMode(value:HapticsMode):HapticsMode
+  {
+    var string;
+
+    switch (value)
+    {
+      case HapticsMode.NONE:
+        string = "None";
+      case HapticsMode.NOTES_ONLY:
+        string = "Notes Only";
+      default:
+        string = "All";
+    };
+
+    var save:Save = Save.instance;
+    save.options.hapticsMode = string;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * Multiplier of intensity for all the haptic feedback effects.
+   * @default `2.5`
+   */
+  public static var hapticsIntensityMultiplier(get, set):Float;
+
+  static function get_hapticsIntensityMultiplier():Float
+  {
+    return Save?.instance?.options?.hapticsIntensityMultiplier ?? 1;
+  }
+
+  static function set_hapticsIntensityMultiplier(value:Float):Float
+  {
+    var save:Save = Save.instance;
+    save.options.hapticsIntensityMultiplier = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * If enabled, the game will automatically pause when tabbing out.
+   * Always enabled on mobile.
+   * @default `true`
+   */
+  public static var autoPause(get, set):Bool;
+
+  static function get_autoPause():Bool
+  {
+    #if mobile
+    return false;
+    #else
+    return Save?.instance?.options?.autoPause ?? true;
+    #end
+  }
+
+  static function set_autoPause(value:Bool):Bool
+  {
+    #if mobile
+    return false;
+    #else
+    if (value != Save.instance.options.autoPause) FlxG.autoPause = value;
+
+    var save:Save = Save.instance;
+    save.options.autoPause = value;
+    Save.system.flush();
+    return value;
+    #end
+  }
+
+  /**
+   * If enabled, the game will automatically launch in fullscreen on startup.
+   * @default `true`
+   */
+  public static var autoFullscreen(get, set):Bool;
+
+  static function get_autoFullscreen():Bool
+  {
+    return Save?.instance?.options?.autoFullscreen ?? true;
+  }
+
+  static function set_autoFullscreen(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.autoFullscreen = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * A global audio offset in milliseconds.
+   * This is used to sync the audio.
+   * @default `0`
+   */
+  public static var globalOffset(get, set):Int;
+
+  static function get_globalOffset():Int
+  {
+    return Save?.instance?.options?.globalOffset ?? 0;
+  }
+
+  static function set_globalOffset(value:Int):Int
+  {
+    var save:Save = Save.instance;
+    save.options.globalOffset = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * If enabled, the game will utilize VSync (or adaptive VSync) on startup.
+   * @default `OFF`
+   */
+  public static var vsyncMode(get, set):lime.ui.WindowVSyncMode;
+
+  static function get_vsyncMode():lime.ui.WindowVSyncMode
+  {
+    #if (mobile || web)
+    return lime.ui.WindowVSyncMode.OFF;
+    #else
+    var value = Save?.instance?.options?.vsyncMode ?? "Off";
+
+    return switch (value)
+    {
+      case "Off":
+        lime.ui.WindowVSyncMode.OFF;
+      case "On":
+        lime.ui.WindowVSyncMode.ON;
+      case "Adaptive":
+        lime.ui.WindowVSyncMode.ADAPTIVE;
+      default:
+        lime.ui.WindowVSyncMode.OFF;
+    };
+    #end
+  }
+
+  static function set_vsyncMode(value:lime.ui.WindowVSyncMode):lime.ui.WindowVSyncMode
+  {
+    #if (mobile || web)
+    return lime.ui.WindowVSyncMode.OFF;
+    #else
+    var string;
+
+    switch (value)
+    {
+      case lime.ui.WindowVSyncMode.OFF:
+        string = "Off";
+      case lime.ui.WindowVSyncMode.ON:
+        string = "On";
+      case lime.ui.WindowVSyncMode.ADAPTIVE:
+        string = "Adaptive";
+      default:
+        string = "Off";
+    };
+
+    WindowUtil.setVSyncMode(value);
+
+    var save:Save = Save.instance;
+    save.options.vsyncMode = string;
+    Save.system.flush();
+    return value;
+    #end
+  }
+
+  public static var unlockedFramerate(get, set):Bool;
+  static var cachedUnlockedFramerateSupport:Null<Bool>;
+
+  public static function supportsUnlockedFramerate():Bool
+  {
+    #if android
+    if (cachedUnlockedFramerateSupport != null) return cachedUnlockedFramerateSupport;
+
+    var maximumRefreshRate:Float = DisplayUtil.getMaximumRefreshRate();
+    if (maximumRefreshRate > 0)
+    {
+      cachedUnlockedFramerateSupport = maximumRefreshRate > 60.5;
+      return cachedUnlockedFramerateSupport;
+    }
+
+    if (FlxG.stage == null || FlxG.stage.window == null) return false;
+    var display = FlxG.stage.window.display;
+    if (display != null)
+    {
+      for (mode in display.supportedModes)
+      {
+        if (mode.refreshRate > 60)
+        {
+          cachedUnlockedFramerateSupport = true;
+          return true;
+        }
+      }
+    }
+    cachedUnlockedFramerateSupport = FlxG.stage.window.displayMode.refreshRate > 60;
+    return cachedUnlockedFramerateSupport;
+    #elseif (web || ios)
+    return false;
+    #else
+    return true;
+    #end
+  }
+
+  static function get_unlockedFramerate():Bool
+  {
+    #if (web || ios)
+    return false;
+    #else
+    return supportsUnlockedFramerate() && (Save?.instance?.options?.unlockedFramerate ?? false);
+    #end
+  }
+
+  static function set_unlockedFramerate(value:Bool):Bool
+  {
+    #if (web || ios)
+    return false;
+    #else
+    if (!supportsUnlockedFramerate()) value = false;
+
+    toggleFramerateCap(value);
+
+    var save:Save = Save.instance;
+    save.options.unlockedFramerate = value;
+    Save.system.flush();
+    return value;
+    #end
+  }
+
+  /**
+   * If >0, the game will display a semi-opaque background under the notes.
+   * `0` for no background, `100` for solid black if you're freaky like that
+   * @default `0`
+   */
+  public static var strumlineBackgroundOpacity(get, set):Int;
+
+  static function get_strumlineBackgroundOpacity():Int
+  {
+    return (Save?.instance?.options?.strumlineBackgroundOpacity ?? 0);
+  }
+
+  static function set_strumlineBackgroundOpacity(value:Int):Int
+  {
+    var save:Save = Save.instance;
+    save.options.strumlineBackgroundOpacity = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * If enabled, the game will hide the mouse when taking a screenshot.
+   * @default `true`
+   */
+  public static var shouldHideMouse(get, set):Bool;
+
+  static function get_shouldHideMouse():Bool
+  {
+    return Save?.instance?.options?.screenshot?.shouldHideMouse ?? true;
+  }
+
+  static function set_shouldHideMouse(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.screenshot.shouldHideMouse = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * If enabled, the game will show a preview after taking a screenshot.
+   * @default `true`
+   */
+  public static var fancyPreview(get, set):Bool;
+
+  static function get_fancyPreview():Bool
+  {
+    return Save?.instance?.options?.screenshot?.fancyPreview ?? true;
+  }
+
+  static function set_fancyPreview(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.screenshot.fancyPreview = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * If enabled, the game will show the preview only after a screenshot is saved.
+   * @default `true`
+   */
+  public static var previewOnSave(get, set):Bool;
+
+  static function get_previewOnSave():Bool
+  {
+    return Save?.instance?.options?.screenshot?.previewOnSave ?? true;
+  }
+
+  static function set_previewOnSave(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.screenshot.previewOnSave = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * Loads the user's preferences from the save data and apply them.
+   */
+  public static function init():Void
+  {
+    // Apply the autoPause setting (enables automatic pausing on focus lost).
+    FlxG.autoPause = Preferences.autoPause;
+
+    // Apply the debugDisplay setting (enables the FPS and RAM display).
+    setDebugDisplayMode(Preferences.debugDisplay);
+    setDebugDisplayBGOpacity(Preferences.debugDisplayBGOpacity / 100);
+
+    toggleFramerateCap(Preferences.unlockedFramerate);
+
+    #if mobile
+    // Apply the allowScreenTimeout setting.
+    lime.system.System.allowScreenTimeout = Preferences.screenTimeout;
+    TouchPointerPlugin.enabled = Preferences.touchPointers;
+    #end
+  }
+
+  static function toggleFramerateCap(unlocked:Bool):Void
+  {
+    #if !(web || ios)
+    #if android
+    var supported = supportsUnlockedFramerate();
+    DisplayUtil.setHighRefreshRateEnabled(unlocked && supported);
+    var target:Int = unlocked && supported ? 1000 : framerate;
+    #else
+    var target:Int = unlocked ? 0 : framerate;
+    #end
+    FlxG.drawFramerate = target;
+    FlxG.updateFramerate = target;
+    #end
+  }
+
+  public static function setDebugDisplayMode(mode:DebugDisplayMode):Void
+  {
+    if (FlxG.game.parent.contains(Main.debugDisplay)) FlxG.game.parent.removeChild(Main.debugDisplay);
+
+    if (mode == DebugDisplayMode.Off) return;
+
+    Main.debugDisplay.isAdvanced = (mode == DebugDisplayMode.Advanced);
+
+    FlxG.game.parent.addChild(Main.debugDisplay);
+  }
+
+  static function setDebugDisplayBGOpacity(value:Float):Void
+  {
+    if (Main.debugDisplay == null) return;
+
+    Main.debugDisplay.backgroundOpacity = value;
+  }
+
+  /**
+   * If enabled, subtitles will appear during some songs and cutscenes.
+   * @default `true`
+   */
+  public static var subtitles(get, set):Bool;
+
+  static function get_subtitles():Bool
+  {
+    return Save?.instance?.options?.subtitles ?? true;
+  }
+
+  static function set_subtitles(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.subtitles = value;
+    Save.system.flush();
+    return value;
+  }
+
+  #if mobile
+  /**
+   * If enabled, device will be able to sleep on its own.
+   * @default `false`
+   */
+  public static var screenTimeout(get, set):Bool;
+
+  static function get_screenTimeout():Bool
+  {
+    return Save?.instance?.mobileOptions?.screenTimeout ?? false;
+  }
+
+  static function set_screenTimeout(value:Bool):Bool
+  {
+    if (value != Save.instance.mobileOptions.screenTimeout) lime.system.System.allowScreenTimeout = value;
+
+    var save:Save = Save.instance;
+    save.mobileOptions.screenTimeout = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * Controls Scheme for the hitbox.
+   * @default `4 Lanes`
+   */
+  public static var controlsScheme(get, set):String;
+
+  static function get_controlsScheme():String
+  {
+    return Save?.instance?.mobileOptions?.controlsScheme ?? FunkinHitboxControlSchemes.Arrows;
+  }
+
+  static function set_controlsScheme(value:String):String
+  {
+    var save:Save = Save.instance;
+    save.mobileOptions.controlsScheme = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * Arrow box layout: 'Arrow' or 'Hitbox'.
+   * @default `Arrow`
+   */
+  public static var arrowBoxLayout(get, set):String;
+
+  static function get_arrowBoxLayout():String
+  {
+    if (ControlsHandler.hasExternalInputDevice) return 'Arrow';
+    return Save?.instance?.mobileOptions?.arrowBoxLayout ?? 'Arrow';
+  }
+
+  static function set_arrowBoxLayout(value:String):String
+  {
+    var save:Save = Save.instance;
+    save.mobileOptions.arrowBoxLayout = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * Whether to use RGB colors from notes for the hitbox.
+   * @default `false`
+   */
+  public static var arrowRGB(get, set):Bool;
+
+  static function get_arrowRGB():Bool
+  {
+    return Save?.instance?.mobileOptions?.arrowRGB ?? false;
+  }
+
+  static function set_arrowRGB(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.mobileOptions.arrowRGB = value;
+    Save.system.flush();
+    return value;
+  }
+
+  /**
+   * Hitbox transparency percentage (0 to 90).
+   * @default `10`
+   */
+  public static var arrowTransparency(get, set):Int;
+
+  static function get_arrowTransparency():Int
+  {
+    return Save?.instance?.mobileOptions?.arrowTransparency ?? 10;
+  }
+
+  static function set_arrowTransparency(value:Int):Int
+  {
+    var save:Save = Save.instance;
+    save.mobileOptions.arrowTransparency = value;
+    Save.system.flush();
+    return value;
+  }
+
+  #if FEATURE_MOBILE_IAP
+  /**
+   * If bought, the game will not show any ads.
+   * @default `false`
+   */
+  @:unreflective
+  public static var noAds(get, set):Bool;
+
+  @:unreflective
+  static function get_noAds():Bool
+  {
+    if (InAppPurchasesUtil.hasInitialized) noAds = InAppPurchasesUtil.isPurchased(InAppPurchasesUtil.UPGRADE_PRODUCT_ID);
+    var returnedValue = Save?.instance?.mobileOptions?.noAds ?? false;
+    return returnedValue;
+  }
+
+  @:unreflective
+  static function set_noAds(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.mobileOptions.noAds = value;
+    Save.system.flush();
+    return value;
+  }
+  #end
+  #end
+}

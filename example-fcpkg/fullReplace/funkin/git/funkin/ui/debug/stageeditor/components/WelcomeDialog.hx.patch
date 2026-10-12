@@ -1,0 +1,7 @@
+-# class WelcomeDialog extends Dialog\n\{
+class WelcomeDialog extends Dialog
+{
+	 public var buttonNew:Button;
+     public var contentRecent:VBox;
+     public var contentPresets:VBox;
+     public var boxDrag:haxe.ui.containers.Box;

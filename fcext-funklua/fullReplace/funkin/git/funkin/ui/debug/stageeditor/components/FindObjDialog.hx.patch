@@ -1,0 +1,2 @@
+-# nameField\.text = searchFor;\n +this.field = nameField;\n +this.checkWord = wordCheck;\n +this.checkCaps = capsCheck;
+  

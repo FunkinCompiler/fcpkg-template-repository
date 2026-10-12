@@ -1,0 +1,45 @@
+package funkin.util.plugins;
+
+import flixel.FlxBasic;
+
+/**
+ * Handles volume control in a way that is compatible with alternate control schemes.
+ */
+@:nullSafety
+class VolumePlugin extends FlxBasic
+{
+  public function new()
+  {
+    super();
+  }
+
+  public static function initialize()
+  {
+    FlxG.plugins.addPlugin(new VolumePlugin());
+  }
+
+  public override function update(elapsed:Float):Void
+  {
+    super.update(elapsed);
+
+    var isHaxeUIFocused:Bool = #if FEATURE_HAXEUI haxe.ui.focus.FocusManager.instance?.focus != null #else false #end;
+
+    if (!isHaxeUIFocused)
+    {
+      final player = PlayerSettings.get(1);
+      if (player == null) return;
+
+      // Rebindable volume keys.
+      if (player.controls.VOLUME_MUTE) FlxG.sound.toggleMuted();
+      else if (player.controls.VOLUME_UP) FlxG.sound.changeVolume(0.1);
+      else if (player.controls.VOLUME_DOWN) FlxG.sound.changeVolume(-0.1);
+    }
+  }
+
+  override public function destroy():Void
+  {
+    if (FlxG.plugins.list.contains(this)) FlxG.plugins.remove(this);
+
+    super.destroy();
+  }
+}

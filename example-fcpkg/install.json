@@ -1,0 +1,15 @@
+{
+  "version": "1.1.0",
+  "funkinReferenceTag": "94fcf37d4062f177643279332093622bb3a71f2a",
+  "fullReplaceableFiles": "fullReplace",
+  "haxelibRemoveFolders": [
+    "FlxPartialSound/git/example",
+    "funkin/git/docs"
+  ],
+  "funkinPatchRules": {
+    "class ChartEditorHoldNoteContextMenu extends ChartEditorBaseContextMenu\\n\\{": "class ChartEditorHoldNoteContextMenu extends ChartEditorBaseContextMenu //Patched \n    {\n      public var contextmenuRemoveHold:MenuItem;\n\n      ",
+    "^  static function (.*)\\((.*)\\):": "  public static function $1($2):"
+  },
+  "funkinPatchExclude": ["../funkin/play/notes/notekind/NoteKind.hx"],
+  "installStage": 0
+}

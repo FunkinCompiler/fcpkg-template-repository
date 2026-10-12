@@ -1,0 +1,5 @@
+-# class ChartEditorCommandPalette extends Panel\n{
+class ChartEditorCommandPalette extends Panel // ll
+{
+  public var commandPaletteInput:TextField;
+  public var commandPaletteList:haxe.ui.containers.ListView;

@@ -1,0 +1,7 @@
+-# class BackupAvailableDialog extends Dialog\n{
+class BackupAvailableDialog extends Dialog
+{
+  public var backupTimeLabel:Label;
+  public var dialogCancel:Button;
+  public var buttonGoToFolder:Button;
+  public var buttonOpenBackup:Button;

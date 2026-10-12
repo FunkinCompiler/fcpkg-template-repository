@@ -1,0 +1,4 @@
+-# private class ObjectTintView extends VBox\n{
+private class ObjectTintView extends VBox
+{
+  public var picker:ColorPicker;

@@ -1,0 +1,5 @@
+-# class WelcomeDialog extends Dialog\n\{
+class WelcomeDialog extends Dialog
+{
+     public var buttonNew:Label;
+

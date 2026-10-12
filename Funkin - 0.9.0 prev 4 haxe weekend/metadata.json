@@ -1,0 +1,40 @@
+{
+    "version":"1.0.0",
+    "name":"Official FNF (V-Slice)",
+    "description":"ver. 0.9.0-preview4",
+    
+    "mockPolymodCalls": true,
+    "convertImports": true,
+    "convertCasts": true,
+    "stripPackage": false,
+    "hxmlFile":"funkin.hxml",
+    "cppiaHxmlFile":"cppia.hxml",
+    
+    "importBlacklist": 	{
+        "^funkin\\.util\\.FileUtil": "Avoid using this class if possible (doesn't work on CPPIA and Mobile)",
+		"^Sys":  "Mods are not allowed to access system (Use companion apps to bypass this)",
+        "^cpp\\.Lib":  "Attaching binaried to FNF is forbidden within mods",
+        "^haxe\\.Http": "It just is for some reason (alias for 'sys.Http' on cpp)",
+        "^haxe\\.Unserializer":  "Mods are not allowed to resolve classes on their own",
+        "^lime\\.utils\\.AssetLibrary":  "AssetLibrary.__fromManifest() can access blacklisted packages apparently.",
+        "^funkin\\.mobile\\.util\\.(.*)":  "Access to all Mobile Utils is forbidden",
+        "^lime.system.(JNI|CFFI|System)":  "Attaching binaried to FNF is forbidden within mods",
+        "^lime\\.utils\\.Assets": "It was supposed to be sandboxed, but is blacklisted instead. Use 'funkin.Assets'!",
+        "^openfl\\.utils\\.Assets": "It was supposed to be sandboxed, but is blacklisted instead. Use 'funkin.Assets'!",
+        "^openfl\\.Lib":  "Mods are not allowed to resolve classes on their own",
+        "^openfl\\.system.ApplicationDomain":  "Mods are not allowed to resolve classes on their own",
+        "^openfl\\.net\\.SharedObject":  "Mods are not allowed to resolve classes on their own",
+        "^openfl\\.desktop\\.NativeProcess":  "Spawning processes is disallowd within mods. Launch FNF with a companion app if you need external system access.",
+        "^funkin\\.util\\.macro\\.EnvironmentConfigMacro":  "Reading build secrets is disallowed",
+		"^sys\\.(.*)":  "Mods are not allowed to access system (Use companion apps to bypass this)",
+        "^extension\\.(.*)":  "Native extension reference. There is likely a utility class for what you're trying to achieve!",
+        "^polymod\\.(.*)":  "Use 'PolymodHandler' if you need access to mod list",
+        "^hscript\\.(.*)":  "Interpreting custom haxe code is disallowed",
+        "^io\\.newgrounds\\.(.*)":  "Use 'NewgroundsClient' (sandboxed) if you need \"read\" access to NG data",
+        "^funkin\\.util\\.macro\\.(.*)":  "Some bypasses used this class, so it's banned from use in mods",
+        "^funkin\\.external\\.android\\.CallbackUtil":  "External classes for android that bridge to private JNI methods & callbacks",
+        "^funkin\\.external\\.android\\.DataFolderUtil":  "External classes for android that bridge to private JNI methods & callbacks",
+        "^funkin\\.external\\.android\\.JNIUtil":  "External classes for android that bridge to private JNI methods & callbacks"
+
+    }
+}

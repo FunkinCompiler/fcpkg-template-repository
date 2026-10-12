@@ -1,0 +1,17 @@
+-# class ChartEditorOffsetsToolbox extends ChartEditorBaseToolbox\n\{
+class ChartEditorOffsetsToolbox extends ChartEditorBaseToolbox //Patched 
+    {
+      public var offsetPlayerVolume:Slider;
+      public var offsetPlayerMute:Button;
+      public var offsetPlayerSolo:Button;
+      
+      public var offsetOpponentVolume:Slider;
+      public var offsetOpponentMute:Button;
+      public var offsetOpponentSolo:Button;
+      
+      public var offsetInstrumentalVolume:Slider;
+      public var offsetInstrumentalMute:Button;
+      public var offsetInstrumentalSolo:Button;
+      
+      public var offsetLabelTime:Label;
+

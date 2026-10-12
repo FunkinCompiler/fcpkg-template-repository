@@ -1,0 +1,12 @@
+-# class ChartEditorColorPicker extends ChartEditorBaseDialog\n{
+class ChartEditorColorPicker extends ChartEditorBaseDialog // lol
+{
+  public var colorPalette1:haxe.ui.containers.Box;
+  public var colorPalette2:haxe.ui.containers.Box;
+  public var colorPalette3:haxe.ui.containers.Box;
+  public var colorPalette4:haxe.ui.containers.Box;
+  public var colorPalette5:haxe.ui.containers.Box;
+  public var colorPalette6:haxe.ui.containers.Box;
+  public var colorPalette7:haxe.ui.containers.Box;
+  public var colorPalette8:haxe.ui.containers.Box;
+  public var colorPicker:haxe.ui.components.ColorPicker;

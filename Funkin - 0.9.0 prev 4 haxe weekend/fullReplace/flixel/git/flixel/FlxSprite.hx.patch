@@ -1,0 +1,10 @@
+-# class FlxSprite extends FlxObject\n\{
+class FlxSprite extends FlxObject
+{
+    public var localX:Float = 0;
+	public var localY:Float = 0;
+	public var localAngle:Float = 0;
+	public var localAlpha:Float = 0;
+	public var localScale:FlxPoint = FlxPoint.get(1, 1);
+	public var localVisible:Bool = true;
+

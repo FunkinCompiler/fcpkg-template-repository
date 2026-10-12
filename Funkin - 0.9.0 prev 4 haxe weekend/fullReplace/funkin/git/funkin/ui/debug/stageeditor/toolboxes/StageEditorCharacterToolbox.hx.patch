@@ -1,0 +1,5 @@
+-# class StageEditorCharacterMenu extends Menu // copied from chart editor\n{
+class StageEditorCharacterMenu extends Menu
+{
+  public var charSelectScroll:haxe.ui.containers.ScrollView;
+  public var charIconName:Label;

@@ -1,0 +1,16 @@
+-# class ChartEditorWelcomeDialog extends ChartEditorBaseDialog\n\{
+class ChartEditorWelcomeDialog extends ChartEditorBaseDialog //Patched 
+    {
+      public var splashCreateFromSongBasicErect:Label;
+      public var splashCreateFromSongBasicOnly:Label;
+      public var splashCreateFromSongErectOnly:Label;
+      public var splashImportChartLegacy:Label;
+      public var splashBrowse:Button;
+      
+      public var buttonNew:Label;
+      
+      public var splashRecentContainer:VBox;
+      public var splashTemplateContainer:VBox;
+      public var splashImportChartOsuMania:Button;
+      public var splashImportChartStepMania:Button;
+      public var splashTemplateList:funkin.ui.haxeui.components.editors.SongTemplateList;

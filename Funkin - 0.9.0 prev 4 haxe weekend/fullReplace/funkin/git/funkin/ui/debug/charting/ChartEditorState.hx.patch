@@ -1,0 +1,38 @@
+-# class ChartEditorState extends UIState \/\/ UIState derives from MusicBeatState\n\{
+class ChartEditorState extends UIState
+{
+    public var menubarItemToggleToolboxNoteData:MenuCheckBox;
+    public var menubarItemToggleToolboxEventData:MenuCheckBox;
+    public var menubarItemToggleToolboxOffsets:MenuCheckBox;
+    public var menubarItemToggleToolboxOpponentPreview:MenuCheckBox;
+    
+    public var menubarItemSelectAllNotes:MenuItem;
+      public var menubarItemSelectAllEvents:MenuItem;
+      public var menubarItemPlaytestFull:MenuItem;
+      public var menubarItemPlaytestMinimal:MenuItem;
+      
+      public var menubarItemWelcomeDialog:MenuItem;
+      public var menubarItemGoToBackupsFolder:MenuItem;
+      public var menubarItemUserGuide:MenuItem;
+      public var menubarItemAbout:MenuItem;
+      
+      public var menubarItemToggleToolboxDifficulty:MenuCheckBox;
+      public var menubarItemToggleToolboxFreeplay:MenuCheckBox;
+      public var menubarItemToggleToolboxPlayerPreview:MenuCheckBox;
+      
+      public var menubarItemToggleToolboxMetadata:MenuCheckBox;
+      public var menubarItemToggleToolboxPlaytestProperties:MenuCheckBox;
+      public var playbarDifficulty:Label;
+      public var playbarBPM:Label;
+      
+      public var menuBarItemThemeDark:CheckBox;
+      public var menuBarItemThemeLight:CheckBox;
+      
+      public var menuBarItemInputStyleWASD:MenuOptionBox;
+      public var menuBarItemInputStyleNumberKeys:MenuOptionBox;
+      public var menuBarItemInputStyleNone:MenuOptionBox;
+      
+      public var menubarItemWaveformPosOverlay:MenuOptionBox;
+      public var menubarItemWaveformPosAdjacent:MenuOptionBox;
+      public var menubarItemCommandPalette:MenuItem;
+      public var menubarItemExportChartAsFolder:MenuItem;

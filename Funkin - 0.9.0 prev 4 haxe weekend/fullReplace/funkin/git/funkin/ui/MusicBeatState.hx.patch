@@ -1,0 +1,7 @@
+-# public function getConstructor\(\):NextState\s*{[^]*return nextState;\s*}
+public function getConstructor():NextState
+  {
+    var nextState:NextState = null;
+
+    return nextState;
+  }

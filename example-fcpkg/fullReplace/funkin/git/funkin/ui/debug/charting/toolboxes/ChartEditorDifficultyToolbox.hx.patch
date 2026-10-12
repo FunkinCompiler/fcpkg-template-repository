@@ -1,0 +1,5 @@
+-# class ChartEditorDifficultyToolbox extends ChartEditorBaseToolbox\n{
+class ChartEditorDifficultyToolbox extends ChartEditorBaseToolbox //patched
+{
+  public var difficultyToolboxCloneDifficulty:Button;
+  public var difficultyToolboxMoveDifficulty:Button;
