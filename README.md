@@ -7,8 +7,8 @@ This repo contains my personal project folders used for developing .fcpkg files.
 .fcpkg (Funkin Compiler package) is a zipped [".haxelib" folder](https://lib.haxe.org/documentation/using-haxelib/#newrepo) plus a couple of files to tell haxe how to analyse and compile code targeting Friday Night Funkin'.
 
 This format is currently used by two projects:
-- Funkin Compiler
-- Mikolka's CPPIA compiler
+- [Funkin Compiler](https://github.com/FunkinCompiler/funkin-extension)
+- [Mikolka's CPPIA compiler](https://github.com/FunkinCompiler/mikolka-cppia-compiler)
 
 ## Variants of FcPkg files
 
@@ -22,4 +22,6 @@ https://github.com/FunkinCompiler/fcpkg-cdn/releases
 
 ## How to make FcPkg
 
-In the future I might write a step-by-step guide. For now ``fcext-funklua`` is a sample package targeting "LuaSlice Engine" and ``example-fcpkg`` is focused on documenting features available to the "shallow" packages (work in progress).
+In the future, I might write a step-by-step guide. 
+
+For now ``fcext-funklua`` is a sample package targeting "LuaSlice Engine" and ``example-fcpkg`` is focused on documenting features available to the "shallow" packages *(work in progress)*.
